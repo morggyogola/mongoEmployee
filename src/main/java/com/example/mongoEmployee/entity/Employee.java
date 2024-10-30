@@ -12,11 +12,11 @@ public class Employee {
     private String id;
     private String name;
     private int age;
-    private BigDecimal salary;
+    private Double salary;
 
     public Employee(){}
 
-    public Employee(String name, int age, BigDecimal salary){
+    public Employee(String name, int age, Double salary){
         this.name = name;
         this.age = age;
         this.salary = salary;
@@ -46,11 +46,11 @@ public class Employee {
         this.age = age;
     }
 
-    public BigDecimal getSalary() {
+    public Double getSalary() {
         return salary;
     }
 
-    public void setSalary(BigDecimal salary) {
+    public void setSalary(Double salary) {
         this.salary = salary;
     }
 }
