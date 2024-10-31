@@ -11,9 +11,14 @@ import org.mockito.MockitoAnnotations;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
+
+
 
 
 public class EmployeeServiceTest {
@@ -29,7 +34,7 @@ public class EmployeeServiceTest {
     }
 
     @Test
-    public void createEmployee() {
+    public void testCreateEmployee() {
         //arrange
         EmployeeModel employeeModel = new EmployeeModel("Alice", 25, 25000.00);
 
@@ -46,16 +51,16 @@ public class EmployeeServiceTest {
 
         //assert
         Assertions.assertNotNull(createdEmployee);
-        Assertions.assertEquals("Alice", createdEmployee.getName());
-        Assertions.assertEquals(25000.00, createdEmployee.getSalary());
-        Assertions.assertEquals(25, createdEmployee.getAge());
+        assertEquals("Alice", createdEmployee.getName());
+        assertEquals(25000.00, createdEmployee.getSalary());
+        assertEquals(25, createdEmployee.getAge());
 
 
     }
 
 
     @Test
-    public void getAllEmployees() {
+    public void testGetAllEmployees() {
         //Arrange
         ArrayList<Employee> employeeList = new ArrayList<Employee>();
         employeeList.add(new Employee("Alice", 25, 25000.00));
@@ -67,9 +72,29 @@ public class EmployeeServiceTest {
         List<Employee> listedEmployees = employeeService.getAllEmployees();
 
         //Assert
-        Assertions.assertEquals(2, listedEmployees.size());
-        Assertions.assertEquals("Alice", listedEmployees.get(0).getName());
-        Assertions.assertEquals("Morgy", listedEmployees.get(1).getName());
+        assertEquals(2, listedEmployees.size());
+        assertEquals("Alice", listedEmployees.get(0).getName());
+        assertEquals("Morgy", listedEmployees.get(1).getName());
+    }
+
+    @Test
+    public void testGetEmployeesAboveAge() {
+        //Arrange
+        List<Employee> employees = Arrays.asList(
+                new Employee("Morgy", 30, 250000.00),
+                new Employee("Kitimba", 25, 37000.00),
+                new Employee("Julius", 30, 3098.00),
+                new Employee("Mackenzie", 40, 946000.00)
+        );
+        when(employeeRepository.findAll()).thenReturn(employees);
+
+        //Act
+        Optional<List<Employee>> employeesByAge = employeeService.getEmployeesByAge(25);
+
+        //Assert
+        assertEquals(4,employeesByAge.get().size());
+        assertEquals("Morgy", employeesByAge.get().get(0).getName());
+
     }
 
 }
