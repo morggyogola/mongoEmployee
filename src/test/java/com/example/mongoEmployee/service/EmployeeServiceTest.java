@@ -19,8 +19,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
 
 
-
-
 public class EmployeeServiceTest {
 
     @Mock
@@ -81,7 +79,7 @@ public class EmployeeServiceTest {
     public void testGetEmployeesAboveAge() {
         //Arrange
         List<Employee> employees = Arrays.asList(
-                new Employee("Morgy", 30, 250000.00),
+                new Employee("Morgy", 13, 250000.00),
                 new Employee("Kitimba", 25, 37000.00),
                 new Employee("Julius", 30, 3098.00),
                 new Employee("Mackenzie", 40, 946000.00)
@@ -89,12 +87,43 @@ public class EmployeeServiceTest {
         when(employeeRepository.findAll()).thenReturn(employees);
 
         //Act
-        Optional<List<Employee>> employeesByAge = employeeService.getEmployeesByAge(25);
+        Optional<List<Employee>> employeesByAge = employeeService.getEmployeesAboveAge(25);
 
         //Assert
-        assertEquals(4,employeesByAge.get().size());
-        assertEquals("Morgy", employeesByAge.get().get(0).getName());
+        assertEquals(3, employeesByAge.get().size());
+        assertEquals("Kitimba", employeesByAge.get().get(0).getName());
 
     }
+
+    @Test
+    public void testGetEmployeesByLetter() {
+        //Arrange
+        List<Employee> employees = Arrays.asList(
+                new Employee("Morgy", 13, 250000.00),
+                new Employee("Mutuku", 25, 37000.00),
+                new Employee("Waweru", 56, 65657.00)
+        );
+        when(employeeRepository.findAll()).thenReturn(employees);
+
+        //Act
+        Optional<List<Employee>> employeesWithLetter = employeeService.getEmployeesByNameStartingWith("M");
+
+        assertEquals(2, employeesWithLetter.get().size());
+        assertEquals("Morgy", employeesWithLetter.get().get(0).getName());
+    }
+
+    @Test
+    public void testGetSalaryCount() {
+        List<Employee> employees = Arrays.asList(
+                new Employee("Max", 23, 100.00),
+                new Employee("Jeff", 40, 100.00)
+        );
+        when(employeeRepository.findAll()).thenReturn(employees);
+
+        Double salaryCount = employeeService.calculateSalary();
+
+        assertEquals(200.0, salaryCount);
+    }
+
 
 }
