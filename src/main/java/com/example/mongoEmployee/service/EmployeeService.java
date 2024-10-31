@@ -35,7 +35,7 @@ public class EmployeeService {
 
     }
 
-    public Optional<List<Employee>> getEmployeesByAge(int age) {
+    public Optional<List<Employee>> getEmployeesAboveAge(int age) {
         return Optional.of(employeeRepository.findAll()
                 .stream()
                 .filter(employee -> employee.getAge() >= age)

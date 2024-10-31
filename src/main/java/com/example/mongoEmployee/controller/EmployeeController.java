@@ -32,8 +32,8 @@ public class EmployeeController {
     }
 
     @GetMapping("/getByAge")
-    public ResponseEntity<Optional<List<Employee>>> getEmployeeByAge(@RequestParam int age) {
-        Optional<List<Employee>> employees = employeeService.getEmployeesByAge(age);
+    public ResponseEntity<Optional<List<Employee>>> getEmployeeAboveAge(@RequestParam int age) {
+        Optional<List<Employee>> employees = employeeService.getEmployeesAboveAge(age);
         return new ResponseEntity<>(employees, HttpStatus.OK);
     }
 
@@ -45,7 +45,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/getSalary")
-    public ResponseEntity<Double> getEmployeeBySalary() {
+    public ResponseEntity<Double> getEmployeeSalaryCount() {
         Double salaryCount = employeeService.calculateSalary();
         return new ResponseEntity<>(salaryCount, HttpStatus.OK);
     }
