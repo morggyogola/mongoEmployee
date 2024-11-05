@@ -2,41 +2,47 @@ package com.example.mongoEmployee.controller;
 
 import com.example.mongoEmployee.entity.Employee;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Test;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MongoDBContainer;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static org.springframework.boot.web.client.ClientHttpRequestFactories.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(properties = {
+        "spring.data.mongodb.host=${testcontainers.mongodb.host}",
+        "spring.data.mongodb.port=${testcontainers.mongodb.port}"
+})
 @AutoConfigureMockMvc
 public class EmployeeControllerIntegrationTest {
 
     //Mongo Test Container startup
 
-    MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:latest");
+    private static MongoDBContainer mongoDBContainer;
 
 
-    @BeforeEach
-    public void setUp() {
+    @BeforeAll
+    public static void setUp() {
+        mongoDBContainer = new MongoDBContainer("mongo:latest");
         mongoDBContainer.start();
+        System.setProperty("testcontainers.mongodb.host", mongoDBContainer.getHost());
+        System.setProperty("testcontainers.mongodb.port", mongoDBContainer.getFirstMappedPort().toString());
     }
 
-    @AfterEach
-    public void tearDown() {
+    @AfterAll
+    public static void tearDown() {
         mongoDBContainer.stop();
     }
 
@@ -56,7 +62,7 @@ public class EmployeeControllerIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(employeeJson))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.name").value("Alice"));
+                .andExpect(jsonPath("$.name").value("Morgy"));
     }
 
     @Test
