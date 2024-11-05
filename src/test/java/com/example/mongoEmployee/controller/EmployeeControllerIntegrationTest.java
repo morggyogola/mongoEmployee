@@ -67,10 +67,36 @@ public class EmployeeControllerIntegrationTest {
 
     @Test
     public void testGetAllEmployees() throws Exception {
-
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getEmployees"))
                 .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isArray())
+                .andExpect(jsonPath("$[0]").exists());
+    }
+
+    @Test
+    public void testGetEmployeesAboveAge() throws Exception {
+        int age = 25;
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getEmployees")
+                        .param("age",String.valueOf(age)))
+                .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void testGetEmployeesByLetter() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getByLetter")
+                .param("letter","M"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
+    }
+
+    @Test
+    public void getEmployeeSalary() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/getSalary"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$").isNumber());
     }
 
 
